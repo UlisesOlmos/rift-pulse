@@ -3,23 +3,29 @@ import {
   PrimaryColumn,
   Column,
   OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { MatchParticipant } from './match-participant.entity';
+import { RiotRegionalRoute } from '../../riot/riot.interface';
 
 @Entity('matches')
 export class Match {
-  @PrimaryColumn()
+
+  @PrimaryColumn({ type: 'varchar' })
   matchId: string;
 
-  @Column()
-  region: string;
+  @Column({
+    type: 'enum',
+    enum: RiotRegionalRoute,
+  })
+  region: RiotRegionalRoute;
 
-  @Column({ type: 'timestamp' })
-  gameCreation: Date;
+  @Column({ type: 'bigint' })
+  gameCreation: string;
 
-  @Column()
-  gameDuration: number;
+  @Column({ type: 'bigint' })
+  gameDuration: string;
 
   @Column()
   gameVersion: string;
@@ -30,6 +36,12 @@ export class Match {
   @Column({ nullable: true })
   gameMode: string;
 
-  @OneToMany(() => MatchParticipant, (participant) => participant.match)
+  @OneToMany(
+    () => MatchParticipant,
+    (participant) => participant.match,
+  )
   participants: MatchParticipant[];
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

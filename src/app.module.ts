@@ -8,6 +8,7 @@ import config from './config';
 import { CollectorsModule } from './collectors/collectors.module';
 import { MatchesModule } from './matches/match.module';
 import { BullModule } from '@nestjs/bullmq';
+import { MatchCollectorModule } from './match-collectors/match-collectors.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { BullModule } from '@nestjs/bullmq';
     }),
     DatabaseModule,
     MatchesModule,
+    MatchCollectorModule,
     CollectorsModule
   ],
   controllers: [AppController],

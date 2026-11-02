@@ -4,21 +4,47 @@ import {
     Column,
     ManyToOne,
     JoinColumn,
+    Index,
+    PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Match } from './match.entity';
 import { Player } from '../../players/entities/player.entity';
 
 @Entity('match_participants')
+@Index(['puuid'])
+@Index(['championId'])
+@Index(['matchId', 'puuid'], { unique: true })
 export class MatchParticipant {
-    @PrimaryColumn()
+
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @Column()
     matchId: string;
 
-    @PrimaryColumn()
+    @ManyToOne(
+        () => Match,
+        (match) => match.participants,
+        { onDelete: 'CASCADE' },
+    )
+    @JoinColumn({
+        name: 'matchId',
+        referencedColumnName: 'matchId',
+    })
+    match: Match;
+
+    @Column()
     puuid: string;
+
+    @Column({ nullable: true })
+    playerPuuid: string | null;
 
     @Column()
     championId: number;
+
+    @Column()
+    championName: string;
 
     @Column()
     teamId: number;
@@ -27,7 +53,7 @@ export class MatchParticipant {
     teamPosition: string;
 
     @Column()
-    win: boolean;
+    individualPosition: string;
 
     @Column()
     kills: number;
@@ -39,13 +65,41 @@ export class MatchParticipant {
     assists: number;
 
     @Column()
+    win: boolean;
+
+    @Column()
     goldEarned: number;
 
-    @ManyToOne(() => Match, (match) => match.participants)
-    @JoinColumn({ name: 'matchId' })
-    match: Match;
+    @Column()
+    totalDamageDealtToChampions: number;
 
-    @ManyToOne(() => Player, (player) => player.participants)
-    @JoinColumn({ name: 'puuid' })
-    player: Player;
+    @Column()
+    totalMinionsKilled: number;
+
+    @Column()
+    neutralMinionsKilled: number;
+
+    @Column()
+    champLevel: number;
+
+    @Column({ nullable: true })
+    summoner1Id: number;
+
+    @Column({ nullable: true })
+    summoner2Id: number;
+
+    @ManyToOne(
+        () => Player,
+        (player) => player.participants,
+        {
+            nullable: true,
+            onDelete: 'SET NULL',
+        },
+    )
+    @JoinColumn({
+        name: 'playerPuuid',
+        referencedColumnName: 'puuid',
+    })
+    player: Player | null;
+
 }
