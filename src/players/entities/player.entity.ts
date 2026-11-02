@@ -5,7 +5,7 @@ import { PlayerRankSnapshot } from './play-rank-snapshot.entity';
 @Entity('players')
 export class Player {
     @PrimaryColumn({ type: 'varchar' })
-    puuid: number;
+    puuid: string;
 
     @Column()
     region: string;
